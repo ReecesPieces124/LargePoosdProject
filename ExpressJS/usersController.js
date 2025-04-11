@@ -5,15 +5,23 @@ const Users = require("../models/Users");
 
 // route for retrieving a user via MongoDB API
 exports.getUsers = async (req, res) => {
-  const users = await Users.find();
-  res.json(users); // returns users info in JSON format
+  try {
+    const users = await Users.find();
+    res.json(users); // returns users info in JSON format
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // route for creating a new user
 exports.createUser = async (req, res) => {
-  const { firstname, lastname, password, email } = req.body; // definition of required body info
-  const user = await Users.create({ firstname, lastname, password, email });
-  res.status(201).json(user); // code 201 means created successfully
+  try {
+    const { firstname, lastname, password, email } = req.body; // definition of required body info
+    const user = await Users.create({ firstname, lastname, password, email });
+    res.status(201).json(user); // code 201 means created successfully
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // route for deleting a user by ID

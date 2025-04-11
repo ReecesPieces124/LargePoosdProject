@@ -2,7 +2,7 @@
 // goes into (/routes/usersRoutes.js)
 const express = require("express");
 const router = express.Router();
-const { getUsers, createUser, deleteUser } = require("../controllers/userController");
+const { getUsers, createUser, deleteUser } = require("../controllers/usersController");
 
 router.get("/", getUsers);         // GET /api/users
 router.post("/", createUser);      // POST /api/users
