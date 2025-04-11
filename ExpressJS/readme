@@ -1,0 +1,10 @@
+Contains some config options for index.js in backend server;
+contains routers for both Cats and Users schema;
+contains schema definitions and controller files for each schema;
+contains db config file as well. Still need to create the DB as a .env variable so we can securely add it into the db.js file;
+
+Schema is the model of the data, like a table, defined in Cats.js or Users.js;
+Controller is the logic for executing a route, handled by the MongoDB API;
+Routes are just the route definitions for each schema;
+
+- JP
