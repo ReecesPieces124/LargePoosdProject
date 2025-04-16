@@ -1,6 +1,11 @@
-import { Button } from './button'
+import { Button } from "@/components/ui/button"
 import pawLogo from '../../assets/paw_logo.png';
-const navItems = ['Login'];
+import { Link } from 'react-router-dom'
+const navItems = [
+  { name: "Home", path: "/" },
+  { name: "Login", path: "/login" },
+  { name: "Register", path: "/register" },
+];
 
 export default function MainNav() {
     return (
@@ -17,16 +22,18 @@ export default function MainNav() {
         </div>
 
         {/* Nav items on the right */}
-        <div className="flex gap-2">
-          {navItems.map((item, index) => (
-            <Button key={index} variant="link">
-              {item}
+        <div className="flex gap-2 ">
+          {navItems.map((item) => (
+            <Button asChild variant = "secondary" key = {item.path}>
+              <Link to = {item.path}>
+                {item.name}
+              </Link>
             </Button>
           ))}
         </div>
       </div>
       <div className="w-screen relative left-1/2 -ml-[50vw] -mr-[50vw]">
-        <hr className="border-b border-gray-200 mt-2"/>
+        <hr className="border-b border-gray-200 mt-5"/>
       </div>
     </div>
     );
