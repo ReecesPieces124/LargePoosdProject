@@ -25,7 +25,9 @@ export default function MainNav() {
           ))}
         </div>
       </div>
-      <hr className="border-b mt-2 border-gray-200 -mx-8 sm:-mx-6 lg:-mx-8"/>
+      <div className="w-screen relative left-1/2 -ml-[50vw] -mr-[50vw]">
+        <hr className="border-b border-gray-200 mt-2"/>
+      </div>
     </div>
     );
   }
