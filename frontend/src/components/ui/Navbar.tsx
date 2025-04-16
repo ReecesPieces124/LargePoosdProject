@@ -5,7 +5,7 @@ const navItems = [
   { name: "Home", path: "/" },
   { name: "Login", path: "/login" },
   { name: "Register", path: "/register" },
-];
+] as const;
 
 export default function MainNav() {
     return (

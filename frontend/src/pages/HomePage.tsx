@@ -1,6 +1,22 @@
+import catPng from '@/assets/cat1.png'
+
+
 function HomePage() {
     return(
-        <h1>HELLO!</h1>
+        <>
+        <div className = "flex flex-row">
+        <div className = "flex flex-col">
+            <h1 className="text-left mb-4 text-4xl">Find your purrfect match</h1>
+            <p className = "text-left mb-4">
+            Every cat deserves a cozy home and a loving companion. 
+            Whether you're looking for a playful kitten or a calm cuddle buddy, 
+            we're here to help you find your purrfect match. 
+            Start your adoption journey today and give a cat the forever home they’ve been waiting for. 🐾
+            </p>
+        </div>
+        <img className = "w-80 h-80" src={catPng}/>
+        </div>
+        </>
     )
 }
 
