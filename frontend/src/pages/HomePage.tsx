@@ -17,15 +17,15 @@ function HomePage() {
             for. 🐾
           </p>
           <div className="flex flex-row gap-4">
-            <Button className="w-40 h-11 gap-2 bg-black text-white rounded-md hover:bg-gray-600">
+            <Button className="w-60 h-15 gap-2 bg-black text-white rounded-md hover:bg-gray-600">
               Browse Cats
             </Button>
-            <Button className="w-40 h-11 gap-2 bg-black text-white rounded-md hover:bg-gray-600">
+            <Button className="w-60 h-15 gap-2 bg-black text-white rounded-md hover:bg-gray-600">
               Post Cats
             </Button>
           </div>
         </div>
-        <img className="w-96 h-96 ml-10" src={catPng} />
+        <img className="w-98 h-98 ml-10" src={catPng} />
       </div>
     </>
   );

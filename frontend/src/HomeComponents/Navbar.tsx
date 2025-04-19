@@ -26,9 +26,12 @@ export default function MainNav() {
               asChild
               variant="ghost"
               key={item.path}
-              className="text-2xl font-bold text-black hover:bg-gray-600 px-4 py-2 rounded-md"
+              className="text-2xl font-bold text-black"
             >
-              <Link to={item.path}>{item.name}</Link>
+              <Link className = "relative inline-block p-2 group" to={item.path}>
+                {item.name}
+                <span className = "absolute top-9 left-0 bg-black h-[2px] w-0 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
             </Button>
           ))}
         </div>
