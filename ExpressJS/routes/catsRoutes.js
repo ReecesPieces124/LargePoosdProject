@@ -1,11 +1,17 @@
-// this is the actual definition of the API routes to take
-// goes into (/routes/catsRoutes.js)
+// This file contains helper functions to fetch cat data from the API. will be morphed into the other one
+
 const express = require("express");
 const router = express.Router();
-const { getCats, createCat, deleteCat } = require("../controllers/catsController");
+const {
+  getCats,
+  getCatByPfID,
+  deleteCat,
+  createCat // included for optional use (admin/manual testing)
+} = require("../controllers/catsController");
 
-router.get("/", getCats);         // GET /api/cats
-router.post("/", createCat);      // POST /api/cats
-router.delete("/:id", deleteCat); // DELETE /api/cats/:id
+router.get("/", getCats);               // GET all cats
+router.get("/pfid/:pfID", getCatByPfID); // GET cat by pfID
+router.post("/", createCat);            // POST new cat (fallback / test route)
+router.delete("/:id", deleteCat);       // DELETE by _id
 
 module.exports = router;
