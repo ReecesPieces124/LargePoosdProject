@@ -8,6 +8,7 @@ const usersSchema = new mongoose.Schema({
     lastname: String,
     email: { type: String, unique: true }, // this is the email and is unique to each user
     password: String,
+    userID: { type: Number } // this is the userID that is unique to each user and will serve as primary key when referenced.
 });
 
 module.exports = mongoose.model("Users", usersSchema);
