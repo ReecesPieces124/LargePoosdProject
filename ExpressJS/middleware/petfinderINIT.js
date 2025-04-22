@@ -12,8 +12,8 @@ async function getTokenPF() {
     "https://api.petfinder.com/v2/oauth2/token",
     new URLSearchParams({
       grant_type: "client_credentials",
-      client_id: process.env.OUR_PF_KEY_ENV,
-      client_secret: process.env.OUR_PF_SECRET_ENV
+      client_id: meta.import.env.PFAPI,
+      client_secret: meta.import.env.PFSECRET
     })
   );
 
