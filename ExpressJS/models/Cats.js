@@ -3,15 +3,31 @@
 
 const mongoose = require('mongoose'); // explained in index.js
 
+// doesn't have to match what's online on atlas
 const catsSchema = new mongoose.Schema({ 
     name: String,
-    age: Number,
+    age: String,
     gender: String,
+    status: String,
     city: String,
     state: String,
+    breed: String,
     description: String,
-    imageurl: String,
-    catID: { type: Number, unique: true }, // this is the catID that is unique to each user and will serve as primary key when referenced.
+    imageURL: String,
+    
+    // in order to determine whether or not the cat was created via petfinder or manually by a user
+    source: {
+        type: String,
+        enum: ["manual","petfinder"],
+        default: "manual"
+    },
+
+    // if user created, will help determine if 
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        default: null
+    }
+
 });
 
 module.exports = mongoose.model("Cats", catsSchema);
