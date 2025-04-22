@@ -3,12 +3,32 @@
 
 const mongoose = require('mongoose'); // explained in index.js
 
-const usersSchema = new mongoose.Schema({ 
-    firstname: String,
-    lastname: String,
-    email: { type: String, unique: true }, // this is the email and is unique to each user
-    password: String,
-    userID: { type: Number } // this is the userID that is unique to each user and will serve as primary key when referenced.
+const usersSchema = new mongoose.Schema({
+    firstname: {
+      type: String,
+      required: [true, "First name is required"],
+      trim: true,
+      minlength: [2, "First name must be at least 2 characters"]
+    },
+    lastname: {
+      type: String,
+      required: [true, "Last name is required"],
+      trim: true,
+      minlength: [2, "Last name must be at least 2 characters"]
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/.+@.+\..+/, "Please enter a valid email address"]
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters long"]
+   }
 });
 
 module.exports = mongoose.model("Users", usersSchema);

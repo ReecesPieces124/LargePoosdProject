@@ -20,6 +20,11 @@ exports.createUser = async (req, res) => {
   try {
     const { firstname, lastname, password, email } = req.body; // definition of required body info
 
+     // Ensure all required fields are provided
+     if (!email || !firstname || !lastname || !password) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    
     // handling existing users
     const existingUser = await Users.findOne({email});
     if (existingUser){
