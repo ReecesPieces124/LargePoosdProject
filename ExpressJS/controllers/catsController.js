@@ -13,36 +13,52 @@ const getCats = async (req, res) => {
 // second route is createCat which creates a new cat in the database (generally not used unless we want offline cats)
 const createCat = async (req, res) => {
   try {
+    // required info
     const { name, gender, city, state, description, imageurl } = req.body;
-    const cat = await Cats.create({ name, gender, city, state, description, imageurl });
+    // creates cat in DB
+    const cat = await Cats.create({ name, gender, city, state, description, imageurl, source: "manual", createdBy: req.user.id });
+    // returns success
     res.status(201).json(cat);
+    // error handle
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// third route is getCatByPfID which retrieves a cat by its pfID from the database
-const getCatByPfID = async (req, res) => {
+// third route is getCatByPfID which retrieves a cat by its mongo ID from the database
+const getCatByID = async (req, res) => {
   try {
-    const { pfID } = req.params;
-    const cat = await Cats.findOne({ pfID: Number(pfID) }).lean();
+    // retrieve the cat via the _id from mongo
+    const {id} = req.params;
+    const cat = await Cats.findById(id).lean();
+    // if not cat, return 404
     if (!cat) return res.status(404).json({ message: "Cat not found" });
+    // response is the json of the cat's info
     res.json(cat);
+    // error handle
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// fourth route is deleteCat which deletes a cat by its pfID from the database
+// fourth route is deleteCat which deletes a cat by its mongo ID from the database
 const deleteCat = async (req, res) => {
   try {
+    // find the cat via requested id
     const cat = await Cats.findById(req.params.id);
-    if (cat) {
-      await cat.deleteOne();
-      res.json({ message: "Cat deleted" });
-    } else {
-      res.status(404).json({ message: "Cat not found" });
+
+    // if not found, return 404 status
+    if (!cat) {
+      return res.status(404).json({ message: "Cat not found" });
+  }
+    // verify that the user can delete this cat 
+    if (cat.source !== "manual" || cat.createdBy !== req.user.id) {
+        return res.status(403).json({message: "Not allowed to delete this cat listing (User authentication Error)."});
     }
+    // delete the cat and send success message
+    await cat.deleteOne();
+    res.json({ message: "Cat deleted" });
+    // try-catch error handle 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -52,6 +68,6 @@ const deleteCat = async (req, res) => {
 module.exports = {
   getCats,
   createCat,
-  getCatByPfID,
+  getCatByID,
   deleteCat
 };
