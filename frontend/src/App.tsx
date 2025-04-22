@@ -6,8 +6,7 @@ import Login from './pages/LoginPage'
 import Register from './pages/RegisterPage'
 import MainNav from './HomeComponents/Navbar'
 import Footer from './HomeComponents/Footer'
-
-
+import { Toaster } from "@/components/ui/sonner"
 function App() {
   return (
     <>
@@ -18,6 +17,7 @@ function App() {
           <Route path = "/register" element = {<Register/>}/>
         </Routes>
         <Footer/>
+        <Toaster/>
     </>
   )
 }

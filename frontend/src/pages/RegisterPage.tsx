@@ -6,8 +6,10 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { toast } from "sonner"
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+
 function RegisterPage() {
 
   const [data, setData] = useState({
@@ -26,15 +28,22 @@ function RegisterPage() {
     var js = JSON.stringify(obj);
     try {
       const response = await fetch('http://localhost:5000/api/users/register', {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-      console.log(response)
-      let txt = await response.text();
-      let res = JSON.parse(txt);
-      if(res == "User created successfully") {
-        setMessage('Account created!')
+      var res = await response.json()
+      if(response.status == 201) {
+        toast.success("Account created!")
+      }
+      else if (response.status == 400 && res.error == "All fields are required") {
+        toast.error("All fields are required!")
+      }
+      else if (response.status == 400 && res.error == "Email already registered") {
+        toast.error("Email is already registered!")
+      }
+      else {
+        toast.error("Account is unable to be created! Please check your input")
       }
     }
     catch(error:any) {
-      alert(error.toString())
+      toast.error("Account creation failed!")
     }
   }
 
