@@ -2,6 +2,7 @@ import catPng from "@/assets/cat1.png";
 import { Button } from "@/components/ui/button";
 
 function HomePage() {
+
   return (
     <>
       <div className="flex flex-row my-52">

@@ -7,8 +7,37 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
+import { useState } from "react";
 function RegisterPage() {
+
+  const [data, setData] = useState({
+    firstname : "",
+    lastname : "",
+    email : "",
+    password : "",
+    confirmPass : ""
+  })
+
+  const [message, setMessage] = useState('')
+
+  async function doRegister(event : any) : Promise<void> {
+    event.preventDefault();
+    var obj = {firstname: data.firstname, lastname: data.lastname, email: data.email, password: data.password};
+    var js = JSON.stringify(obj);
+    try {
+      const response = await fetch('http://localhost:5000/api/users/register', {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+      console.log(response)
+      let txt = await response.text();
+      let res = JSON.parse(txt);
+      if(res == "User created successfully") {
+        setMessage('Account created!')
+      }
+    }
+    catch(error:any) {
+      alert(error.toString())
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md p-10 mb-40 shadow-lg bg-white">
@@ -32,6 +61,8 @@ function RegisterPage() {
                   id="firstName"
                   className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
                   placeholder="Enter your first name"
+                  value = {data.firstname}
+                  onChange = {(e) => setData({...data, firstname: e.target.value})}
                 />
               </div>
               <div className="w-1/2">
@@ -46,6 +77,8 @@ function RegisterPage() {
                   id="lastName"
                   className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
                   placeholder="Enter your last name"
+                  value = {data.lastname}
+                  onChange = {(e) => setData({...data, lastname: e.target.value})}
                 />
               </div>
             </div>
@@ -61,6 +94,8 @@ function RegisterPage() {
                 id="email"
                 className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-3"
                 placeholder="Enter your email"
+                value = {data.email}
+                onChange = {(e) => setData({...data, email: e.target.value})}
               />
             </div>
             <div>
@@ -75,6 +110,8 @@ function RegisterPage() {
                 id="password"
                 className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-3"
                 placeholder="Enter your password"
+                value = {data.password}
+                onChange = {(e) => setData({...data, password: e.target.value})}
               />
             </div>
             <div>
@@ -89,12 +126,14 @@ function RegisterPage() {
                 id="confirmPassword"
                 className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-3"
                 placeholder="Re-enter your password"
+                value = {data.confirmPass}
+                onChange = {(e) => setData({...data, confirmPass: e.target.value})}
               />
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button className="w-full h-10">Create account</Button>
+          <Button className="w-full h-10" onClick={doRegister}>Create account</Button>
         </CardFooter>
       </Card>
     </div>
