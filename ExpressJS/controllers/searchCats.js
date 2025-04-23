@@ -1,7 +1,7 @@
 // also a controller, just large enough for its own module !
 const axios = require("axios");
 const Cats = require("../models/Cats");
-const { getTokenPF } = require("../petfinderINIT");
+const { getTokenPF } = require("../middleware/petfinderINIT");
 
 async function searchCats(req, res) {
   try {
