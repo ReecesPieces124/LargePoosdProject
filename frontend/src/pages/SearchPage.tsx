@@ -22,6 +22,8 @@ import { useEffect } from "react";
 import { fetchAllCats } from "@/catsHelpers";
 import { cacheSearch } from "@/catsHelpers";
 import { Button } from "@/components/ui/button"
+import { get } from "http";
+import { toast } from "sonner"
 
 function SearchPage() {
 
@@ -31,28 +33,34 @@ function SearchPage() {
         city: string,
         state: string,
         description: string,
-        imageurl: string,
+        imageURL: string,
         token: string
     };
 
     const [cats, setCats] = useState<Cat[]>([]);
 
     const [data, setData] = useState({
+        city: "",
+        state: "",
+        zip: "",
+        gender: ''
+    });
 
-    })
-
-    const getCats = async() => {
-        try {
-
-        }
-        catch(error) {
-
-        }
-    }
-
-    useEffect(() => {
-        getCats();
-    }, [])
+    async function getCats(e: any) : Promise<void> {
+        e.preventDefault();
+        await cacheSearch({
+            location: data.zip,
+            gender: data.gender,
+            age: 'baby',
+            limit: 40
+        });
+        const catsReq = await fetchAllCats();
+        setCats(catsReq);
+        console.log(catsReq);
+        cats.map((cat) => (
+            console.log(cat.imageURL)
+        ))
+    }        
 
     return (
         <div className="p-25 mb-40 justify-center min-h-screen ">
@@ -62,16 +70,27 @@ function SearchPage() {
             <p className="text-2xl mb-5">
                 Explore lovable cats looking for a forever home near you.
             </p>
-            <div className = "flex gap-5 w-1/2 mb-5">
+            <div className = "flex gap-5 mb-5">
                 <Input type="text"
                    id= "City"
                    className= "mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
                    placeholder= "City"
+                   value={data.city}
+                   onChange={(e) => setData({...data, city: e.target.value})}
                 />
                 <Input type="text"
                    id= "State"
                    className= "mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
                    placeholder= "State"
+                   value={data.state}
+                   onChange={(e) => setData({...data, state: e.target.value})}
+                />
+                <Input type="text"
+                   id= "ZipCode"
+                   className= "mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
+                   placeholder= "Zip Code"
+                   value={data.zip}
+                   onChange={(e) => setData({...data, zip: e.target.value})}
                 />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -85,23 +104,31 @@ function SearchPage() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuRadioGroup>
+                        <DropdownMenuRadioGroup value={data.gender} onValueChange={(v) => setData({...data, gender: v})}>
                             <DropdownMenuRadioItem value="male">Male</DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="female">Female</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>
                 
+                <Button className="mt-1 w-30 h-12" onClick={getCats}>
+                    Search
+                </Button>
             </div>
 
             <div className = "grid grid-cols-3 gap-10">
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        Name
-                    </CardTitle>
-                </CardHeader>
-            </Card>
+            {cats.map((cat) => (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                {cat.name}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <img src={cat.imageURL}/>
+                        </CardContent>
+                    </Card>
+            ))}
             </div>
         </div>
     );

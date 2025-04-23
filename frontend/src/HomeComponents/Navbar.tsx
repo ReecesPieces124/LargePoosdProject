@@ -11,8 +11,8 @@ const navItems = [
 
 export default function MainNav() {
   return (
-    <div className="fixed top-4 left-0 w-screen bg-white z-50">
-      <div className="flex items-center justify-between w-full">
+    <div className="fixed top-0 left-0 w-screen bg-white z-50">
+      <div className="flex items-center justify-between w-full py-4">
         <div className="flex items-center gap-4 pl-20">
           <img
             className="rounded-full w-16 h-16"
@@ -37,7 +37,7 @@ export default function MainNav() {
           ))}
         </div>
       </div>
-      <hr className="border-t border-gray-300 mt-4" />
+      <hr className="border-t border-gray-300 mt-1" />
     </div>
   );
 }

@@ -47,7 +47,7 @@ function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-md p-10 mb-40 shadow-lg bg-white">
+      <Card className="w-full max-w-md p-10 mb-20 shadow-lg bg-white">
         <CardHeader>
           <CardTitle className="text-center text-xl font-bold">
             Register
