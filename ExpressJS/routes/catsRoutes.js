@@ -2,6 +2,9 @@
 
 const express = require("express");
 const router = express.Router();
+const { searchCats } = require("../controllers/searchCats");
+const auth = require("../middleware/auth"); // middleware for authentication
+
 const {
   getCats,
   getCatByID,
@@ -10,8 +13,9 @@ const {
 } = require("../controllers/catsController");
 
 router.get("/", getCats);               // GET all cats
-router.get("/pfid/:pfID", getCatByID); // GET cat by pfID
-router.post("/", createCat);            // POST new cat (fallback / test route)
-router.delete("/:id", deleteCat);       // DELETE by _id
+router.get("/:id", getCatByID); // GET cat by pfID
+router.post("/", auth, createCat);            // POST new cat (fallback / test route)
+router.delete("/:id", auth, deleteCat);       // DELETE by _id
+router.post("/search-cats", searchCats); // POST search for cats by name
 
 module.exports = router;
