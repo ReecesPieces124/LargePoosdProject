@@ -7,6 +7,7 @@ import Register from './pages/RegisterPage'
 import MainNav from './HomeComponents/Navbar'
 import Footer from './HomeComponents/Footer'
 import { Toaster } from "@/components/ui/sonner"
+import Search from './pages/SearchPage'
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
           <Route path = "/" element = {<Home/>}/>
           <Route path = "/login" element = {<Login/>}/>
           <Route path = "/register" element = {<Register/>}/>
+          <Route path = "/search-cat" element = {<Search/>}/>
         </Routes>
         <Footer/>
         <Toaster/>

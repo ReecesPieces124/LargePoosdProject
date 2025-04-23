@@ -20,8 +20,6 @@ function RegisterPage() {
     confirmPass : ""
   })
 
-  const [message, setMessage] = useState('')
-
   async function doRegister(event : any) : Promise<void> {
     event.preventDefault();
     var obj = {firstname: data.firstname, lastname: data.lastname, email: data.email, password: data.password};
