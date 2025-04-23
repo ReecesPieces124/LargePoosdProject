@@ -52,7 +52,7 @@ const deleteCat = async (req, res) => {
       return res.status(404).json({ message: "Cat not found" });
   }
     // verify that the user can delete this cat 
-    if (cat.source !== "manual" || cat.createdBy !== req.user.id) {
+    if (cat.source !== "manual" || !cat.createdBy.equals(req.user.id)) {
         return res.status(403).json({message: "Not allowed to delete this cat listing (User authentication Error)."});
     }
     // delete the cat and send success message
