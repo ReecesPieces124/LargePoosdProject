@@ -34,6 +34,7 @@ async function searchCats(req, res) {
       age: c.age,
       status: c.status,
       gender: c.gender,
+      description: c.description ?? "",
       city: c.contact?.address?.city ?? "",
       state: c.contact?.address?.state ?? "",
       imageURL: c.photos?.[0]?.medium ?? "",
