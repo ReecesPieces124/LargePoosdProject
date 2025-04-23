@@ -8,6 +8,23 @@ const connectDB = require('./config/db'); // import the connectDB function from 
 dotenv.config(); // load our environment variables here
 connectDB(); // call this function from /db.js to establish MongoDB connection (URI needed)
 
+const Cats = require("./models/Cats");
+
+(async () => {
+  // Runs once at startup
+  try {
+    const indexes = await Cats.collection.indexes();
+    const hasCatIdIdx = indexes.find(i => i.name === "catID_1");
+    if (hasCatIdIdx) {
+      await Cats.collection.dropIndex("catID_1");
+      console.log("Dropped obsolete index catID_1");
+    }
+  } catch (err) {
+    // ignore "index not found" errors
+    if (err.codeName !== "IndexNotFound") console.error(err);
+  }
+})();
+
 const app = express(); // create an instance of express
 
 app.use(express.json()); // this tells Express we are using JSON in the req bodies
