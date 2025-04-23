@@ -43,7 +43,8 @@ function SearchPage() {
         city: "",
         state: "",
         zip: "",
-        gender: ''
+        gender: '',
+        age: ""
     });
 
     async function getCats(e: any) : Promise<void> {
@@ -51,7 +52,7 @@ function SearchPage() {
         await cacheSearch({
             location: data.zip,
             gender: data.gender,
-            age: 'baby',
+            age: data.age,
             limit: 40
         });
         const catsReq = await fetchAllCats();
@@ -103,10 +104,29 @@ function SearchPage() {
                             Select the Gender
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-
                         <DropdownMenuRadioGroup value={data.gender} onValueChange={(v) => setData({...data, gender: v})}>
                             <DropdownMenuRadioItem value="male">Male</DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="female">Female</DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button className="mt-1 w-30 h-12" variant = "outline">
+                            Age
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>
+                            Select the Age
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuRadioGroup value={data.age} onValueChange={(v) => setData({...data, age: v})}>
+                            <DropdownMenuRadioItem value="baby">Baby</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="young">Young</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="adult">Adult</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="senior">Senior</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -125,7 +145,7 @@ function SearchPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <img src={cat.imageURL}/>
+                            <img className="rounded-md" src={cat.imageURL}/>
                         </CardContent>
                     </Card>
             ))}
