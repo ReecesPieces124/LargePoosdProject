@@ -20,10 +20,12 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { fetchAllCats } from "@/catsHelpers";
 import { cacheSearch } from "@/catsHelpers";
+import { deleteCat } from "@/catsHelpers";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Footer from "@/components/Footer";
 import { MapPin, VenetianMask, Calendar } from 'lucide-react';
+import { useAuth } from "@/context/AuthContext";
 
 function SearchPage() {
   interface Cat {
@@ -34,10 +36,11 @@ function SearchPage() {
     description: string;
     imageURL: string;
     age: string,
-    token: string;
-    pfUrl: string;
+    source: string,
+    pfURL: string,
+    _id?: string
   }
-
+  const { isAuthenticated, getAuthHeader } = useAuth();
   const [cats, setCats] = useState<Cat[]>([]);
   const [showFooter, setShowFooter] = useState(true);
 
@@ -47,7 +50,6 @@ function SearchPage() {
     zip: "",
     gender: "",
     age: "",
-    pfUrl: ""
   });
 
   useEffect(() => {
@@ -200,6 +202,25 @@ function SearchPage() {
               </p>
             </div>
           </CardContent>
+        <CardFooter className="flex justify-end">
+            {cat.source && isAuthenticated && (
+            <Button 
+                variant="destructive" 
+                size="sm"
+                onClick={async () => {
+                try {
+                    await deleteCat(cat._id!, getAuthHeader);
+                    setCats(cats.filter(c => c._id !== cat._id));
+                    toast.success(`${cat.name} has been removed`);
+                } catch (error) {
+                    toast.error("Failed to delete cat");
+                }
+                }}
+            >
+                Delete
+            </Button>
+            )}
+        </CardFooter>
         </Card>
         ))}
       </div>

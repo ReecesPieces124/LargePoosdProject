@@ -56,11 +56,14 @@ export async function createCat(catData: any, token: any) {
 }
 
 // delete own manual cat
-export async function deleteCat(id: any, token: any) {
+export async function deleteCat(id: string, getAuthHeader: () => HeadersInit) {
   const res = await fetch(`http://localhost:5000/api/cats/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` }
+    headers: getAuthHeader()
   });
-  if (!res.ok) throw new Error("Delete failed");
-  return res.json();               // { message: "Cat deleted" }
+  
+  if (!res.ok) {
+    throw new Error(res.statusText || "Delete failed");
+  }
+  return res.json();
 }
