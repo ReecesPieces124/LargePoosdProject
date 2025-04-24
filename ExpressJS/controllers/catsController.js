@@ -14,9 +14,9 @@ const getCats = async (req, res) => {
 const createCat = async (req, res) => {
   try {
     // required info
-    const { name, gender, city, state, description, imageURL, age } = req.body;
+    const { name, gender, city, state, description, imageURL, age, pfURL } = req.body;
     // creates cat in DB
-    const cat = await Cats.create({ name, gender, city, state, description, age, imageURL, source: "manual", createdBy: req.user.id });
+    const cat = await Cats.create({ name, gender, city, state, description, age, imageURL, pfURL, source: "manual", createdBy: req.user.id });
     // returns success
     res.status(201).json(cat);
     // error handle
