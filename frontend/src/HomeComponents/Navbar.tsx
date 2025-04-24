@@ -1,15 +1,30 @@
 import { Button } from "@/components/ui/button";
 import pawLogo from "@/assets/paw_logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
-const navItems = [
+const homeNavItems = [
   { name: "Home", path: "/" },
   { name: "Login", path: "/login" },
   { name: "Register", path: "/register" },
-  { name: "Search", path: "/search"}
+] as const;
+
+const authNavItems = [
+  { name: "Browse Cats", path: "/search" },
+  { name: "Post a Cat", path: "/post" },
+  { name: "Logout", path: "/logout" },
 ] as const;
 
 export default function MainNav() {
+  const { isAuthenticated, logout } = useAuth();
+  const navItems = isAuthenticated ? authNavItems : homeNavItems;
+  const navigate = useNavigate()
+  const handleLogoutClick = (path: string) => {
+    if (path === "/logout") {
+      logout();
+      navigate("/")
+    }
+  };
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-50">
       <div className = "max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,6 +44,7 @@ export default function MainNav() {
               variant="ghost"
               key={item.path}
               className="text-2xl font-bold text-black"
+              onClick={() => handleLogoutClick(item.path)}
             >
               <Link className = "relative inline-block p-2 group" to={item.path}>
                 {item.name}
