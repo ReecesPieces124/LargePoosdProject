@@ -40,6 +40,9 @@ function SearchPage() {
     pfURL: string,
     _id?: string
   }
+  const isBase64Image = (str: string) => {
+    return str.startsWith('data:image/') && str.includes('base64,');
+  };
   const { isAuthenticated, getAuthHeader } = useAuth();
   const [cats, setCats] = useState<Cat[]>([]);
   const [showFooter, setShowFooter] = useState(true);

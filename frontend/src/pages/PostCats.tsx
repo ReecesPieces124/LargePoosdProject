@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { createCat } from "@/catsHelpers";
-import imageCompression from "browser-image-compression";
 
 function PostCat() {
   const [image, setImage] = useState<File | null>(null);
@@ -22,31 +21,17 @@ function PostCat() {
     gender: "",
   });
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files?.[0]) return;
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setImage(file);
 
-    const file = event.target.files[0];
-    
-    try {
-      // Compress the image (adjust options as needed)
-      const options = {
-        maxSizeMB: 0.5,       // Maximum file size (0.5MB)
-        maxWidthOrHeight: 800, // Resize to 800px width/height
-        useWebWorker: true,    // Faster compression
-      };
-
-      const compressedFile = await imageCompression(file, options);
-      setImage(compressedFile);
-
-      // Generate preview
+      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
       };
-      reader.readAsDataURL(compressedFile);
-    } catch (err) {
-      console.error("Compression error:", err);
-      setError("Failed to compress image");
+      reader.readAsDataURL(file);
     }
   };
 
@@ -54,40 +39,28 @@ function PostCat() {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
-  
+
     try {
       if (!image) {
         throw new Error("Please upload an image");
       }
-  
-      // Convert image to base64 (clean version without metadata prefix)
+
+      // Convert image to base64
       const imageBase64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          // Remove the data:image/*;base64, prefix if present
-          const result = reader.result as string;
-          const base64Data = result.includes('base64,') 
-            ? result.split('base64,')[1] 
-            : result;
-          resolve(base64Data);
-        };
-        reader.onerror = (error) => reject(error);
         reader.readAsDataURL(image);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
       });
-  
-      console.log("Base64 length:", imageBase64.length); // Debug log
-  
-      // Create the payload object
-      const payload = {
-        ...data,
-        imageURL: imageBase64,
-      };
-  
-      console.log("Payload:", payload); // Debug log
-  
+      console.log(imageBase64);
       // Submit with token
-      await createCat(payload, token);
-  
+      await createCat(
+        {
+          ...data,
+          imageURL: imageBase64
+        }, 
+        token);
+      
       // Reset form after successful submission
       setData({
         city: "",
@@ -100,10 +73,9 @@ function PostCat() {
       });
       setImage(null);
       setPreview(null);
-  
+
       alert("Cat posted successfully!");
     } catch (err) {
-      console.error("Submission error:", err); // Debug log
       setError(err instanceof Error ? err.message : "Failed to post cat");
     } finally {
       setIsSubmitting(false);
