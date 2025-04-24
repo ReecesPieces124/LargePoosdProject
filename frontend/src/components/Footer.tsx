@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
 
-function Footer() {
+function Footer({ scrollContainer }: { scrollContainer?: HTMLElement | Window }) {
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    const container = scrollContainer || window; // Default to window if no container is provided
+
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      const currentScrollY = container instanceof Window ? window.scrollY : container.scrollTop;
 
       if (currentScrollY > lastScrollY) {
-        setShow(false); 
+        setShow(false); // Hide on scroll down
       } else {
-        setShow(true); 
+        setShow(true); // Show on scroll up
       }
 
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [scrollContainer, lastScrollY]);
 
   return (
     <footer
