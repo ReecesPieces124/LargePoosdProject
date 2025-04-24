@@ -6,12 +6,33 @@ export async function fetchAllCats() {
 }
 
 // trigger a new Petfinder search/cache 
-export async function cacheSearch({ location, gender, age, limit = 40 } : any) {
-  const qs = new URLSearchParams({ location, gender, age, limit }).toString();
-  const res = await fetch(`http://localhost:5000/api/cats/search-cats?${qs}`, { method: "POST" });
+// src/api/cats.js
+export async function cacheSearch({
+  zip,
+  city,
+  state,
+  gender,
+  age,
+  limit = 40
+}: any) {
+  const params = new URLSearchParams({ gender, age, limit: String(limit) });
+
+  if (zip) {
+    params.set("zip", zip);
+  } else if (city && state) {
+    params.set("city", city);
+    params.set("state", state);
+  }
+
+  const res = await fetch(
+    `http://localhost:5000/api/cats/search-cats?${params.toString()}`,
+    { method: "POST" }
+  );
+
   if (!res.ok) throw new Error("Search failed");
-  return res.json();               // { cached: N }
+  return res.json();            // { cached: N }
 }
+
 
 // fetch one cat by Mongo _id  
 export async function fetchCatById(id: any) {
