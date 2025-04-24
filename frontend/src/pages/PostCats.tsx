@@ -54,12 +54,12 @@ function PostCat() {
       });
       console.log(imageBase64);
       // Submit with token
-      await createCat({ 
-        catData: {
+      await createCat(
+        {
           ...data,
-          image: imageBase64
-        } 
-      }, token);
+          imageURL: imageBase64
+        }, 
+        token);
       
       // Reset form after successful submission
       setData({
