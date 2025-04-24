@@ -9,16 +9,30 @@ async function searchCats(req, res) {
 
     //const location = req.query.location;
     // choosing location by either city,state combo OR zip code:
-    let location = req.query.zip;
-    if (!location) {
-      const {city,state} = req.query;
-      if (city && state) location = `${city},${state}`; 
-    }
+/* -------- 1.  normalise location input -------- */
+let { zip, city, state, location } = req.query;
 
-    if (!location) {
-      return res.status(400).json({ error: "Please provide a city and state OR a zip code." });
+// accept ?location=Orlando,FL or ?location=32801
+if (location) {
+  const m = location.match(/^(\d{5})$/);               // zip
+  if (m) zip = m[1];
+  else {
+    const parts = location.split(",");
+    if (parts.length === 2) {
+      city  = parts[0].trim();
+      state = parts[1].trim();
     }
+  }
+}
 
+if (zip)       location = zip;
+else if (city && state) location = `${city}, ${state}`;
+
+if (!location) {
+  return res
+    .status(400)
+    .json({ error: "Provide ?zip=xxxx OR ?city=City&state=ST OR ?location=City,ST" });
+}
 
     const gender = req.query.gender;
     const age = req.query.age;
@@ -29,6 +43,7 @@ async function searchCats(req, res) {
       params: {
         type: "cat",
         status: "adoptable",
+        distance: 30,
         limit,
         location,
         gender,
