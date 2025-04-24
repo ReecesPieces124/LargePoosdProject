@@ -9,6 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
+import Footer from "@/components/Footer";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -87,6 +88,7 @@ function LoginPage() {
           </CardFooter>
         </form>
       </Card>
+      <Footer />
     </div>
   );
 }

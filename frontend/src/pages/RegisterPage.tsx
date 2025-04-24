@@ -6,56 +6,59 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import Footer from "@/components/Footer";
 
 function RegisterPage() {
-
   const [data, setData] = useState({
-    firstname : "",
-    lastname : "",
-    email : "",
-    password : "",
-    confirmPass : ""
-  })
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPass: "",
+  });
 
-  async function doRegister(event : any) : Promise<void> {
+  async function doRegister(event: any): Promise<void> {
     event.preventDefault();
-    if(data.confirmPass !== data.password) {
-      toast.error("Passwords don't match!")
+    if (data.confirmPass !== data.password) {
+      toast.error("Passwords don't match!");
       return;
     }
-    var obj = {firstname: data.firstname, lastname: data.lastname, email: data.email, password: data.password};
+    var obj = {
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email,
+      password: data.password,
+    };
     var js = JSON.stringify(obj);
     try {
-      const response = await fetch('http://localhost:5000/api/users/register', {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-      var res = await response.json()
-      if(response.status == 201) {
-        toast.success("Account created!")
+      const response = await fetch("http://localhost:5000/api/users/register", {
+        method: "POST",
+        body: js,
+        headers: { "Content-Type": "application/json" },
+      });
+      var res = await response.json();
+      if (response.status == 201) {
+        toast.success("Account created!");
+      } else if (response.status == 400 && res.error == "All fields are required") {
+        toast.error("All fields are required!");
+      } else if (response.status == 400 && res.error == "Email already registered") {
+        toast.error("Email is already registered!");
+      } else {
+        toast.error("Account is unable to be created! Please check your input");
       }
-      else if (response.status == 400 && res.error == "All fields are required") {
-        toast.error("All fields are required!")
-      }
-      else if (response.status == 400 && res.error == "Email already registered") {
-        toast.error("Email is already registered!")
-      }
-      else {
-        toast.error("Account is unable to be created! Please check your input")
-      }
-    }
-    catch(error:any) {
-      toast.error("Account creation failed!")
+    } catch (error: any) {
+      toast.error("Account creation failed!");
     }
   }
 
   return (
-    <div className="pt-20 flex items-center justify-center">
+    <div className="pt-20 flex flex-col items-center justify-center min-h-screen">
       <Card className="max-w-md p-10 mb-20 shadow-lg bg-white">
         <CardHeader>
-          <CardTitle className="text-center text-xl font-bold">
-            Register
-          </CardTitle>
+          <CardTitle className="text-center text-xl font-bold">Register</CardTitle>
         </CardHeader>
         <CardContent>
           <form className="space-y-4">
@@ -72,8 +75,8 @@ function RegisterPage() {
                   id="firstName"
                   className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
                   placeholder="Enter your first name"
-                  value = {data.firstname}
-                  onChange = {(e) => setData({...data, firstname: e.target.value})}
+                  value={data.firstname}
+                  onChange={(e) => setData({ ...data, firstname: e.target.value })}
                 />
               </div>
               <div className="w-1/2">
@@ -88,8 +91,8 @@ function RegisterPage() {
                   id="lastName"
                   className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-2"
                   placeholder="Enter your last name"
-                  value = {data.lastname}
-                  onChange = {(e) => setData({...data, lastname: e.target.value})}
+                  value={data.lastname}
+                  onChange={(e) => setData({ ...data, lastname: e.target.value })}
                 />
               </div>
             </div>
@@ -105,8 +108,8 @@ function RegisterPage() {
                 id="email"
                 className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-3"
                 placeholder="Enter your email"
-                value = {data.email}
-                onChange = {(e) => setData({...data, email: e.target.value})}
+                value={data.email}
+                onChange={(e) => setData({ ...data, email: e.target.value })}
               />
             </div>
             <div>
@@ -121,8 +124,8 @@ function RegisterPage() {
                 id="password"
                 className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-3"
                 placeholder="Enter your password"
-                value = {data.password}
-                onChange = {(e) => setData({...data, password: e.target.value})}
+                value={data.password}
+                onChange={(e) => setData({ ...data, password: e.target.value })}
               />
             </div>
             <div>
@@ -137,16 +140,19 @@ function RegisterPage() {
                 id="confirmPassword"
                 className="mt-1 h-12 w-full rounded-md border-gray-400 text-sm px-3"
                 placeholder="Re-enter your password"
-                value = {data.confirmPass}
-                onChange = {(e) => setData({...data, confirmPass: e.target.value})}
+                value={data.confirmPass}
+                onChange={(e) => setData({ ...data, confirmPass: e.target.value })}
               />
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button className="w-full h-10" onClick={doRegister}>Create account</Button>
+          <Button className="w-full h-10" onClick={doRegister}>
+            Create account
+          </Button>
         </CardFooter>
       </Card>
+      <Footer />
     </div>
   );
 }

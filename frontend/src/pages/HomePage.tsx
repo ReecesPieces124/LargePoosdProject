@@ -1,8 +1,8 @@
 import catPng from "@/assets/cat1.png";
 import { Button } from "@/components/ui/button";
+import Footer from "@/components/Footer";
 
 function HomePage() {
-
   return (
     <>
       <div className="flex flex-row my-52">
@@ -28,6 +28,7 @@ function HomePage() {
         </div>
         <img className="w-98 h-98 ml-10" src={catPng} />
       </div>
+    <Footer />
     </>
   );
 }
