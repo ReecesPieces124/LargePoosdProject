@@ -22,6 +22,10 @@ function RegisterPage() {
 
   async function doRegister(event : any) : Promise<void> {
     event.preventDefault();
+    if(data.confirmPass !== data.password) {
+      toast.error("Passwords don't match!")
+      return;
+    }
     var obj = {firstname: data.firstname, lastname: data.lastname, email: data.email, password: data.password};
     var js = JSON.stringify(obj);
     try {
