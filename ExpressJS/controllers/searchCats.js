@@ -7,7 +7,19 @@ async function searchCats(req, res) {
   try {
     const access = await getTokenPF();
 
-    const location = req.query.location;
+    //const location = req.query.location;
+    // choosing location by either city,state combo OR zip code:
+    let location = req.query.zip;
+    if (!location) {
+      const {city,state} = req.query;
+      if (city && state) location = `${city},${state}`; 
+    }
+
+    if (!location) {
+      return res.status(400).json({ error: "Please provide a city and state OR a zip code." });
+    }
+
+
     const gender = req.query.gender;
     const age = req.query.age;
     const limit = 40; // find the most relevant 40 cats
