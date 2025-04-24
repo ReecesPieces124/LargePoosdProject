@@ -203,7 +203,7 @@ function SearchPage() {
             </div>
           </CardContent>
         <CardFooter className="flex justify-end">
-            {cat.source && isAuthenticated && (
+            {cat.source=="manual" && isAuthenticated && (
             <Button 
                 variant="destructive" 
                 size="sm"
