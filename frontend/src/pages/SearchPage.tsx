@@ -54,13 +54,6 @@ function SearchPage() {
               ? { zip: data.zip, gender: data.gender, age: data.age, limit: 40 }
               : { city: data.city, state: data.state, gender: data.gender, age: data.age, limit: 40 }
           );
-          
-        await cacheSearch({
-            ...(data.zip ? { zip: data.zip } : { city: data.city, state: data.state }),
-            gender: data.gender,
-            age: data.age,
-            limit: 40
-        });
         const catsReq = await fetchAllCats();
         setCats(catsReq);
         console.log(catsReq);
