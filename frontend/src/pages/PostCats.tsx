@@ -57,7 +57,7 @@ function PostCat() {
       await createCat(
         {
           ...data,
-          imageURL: imageBase64
+          imageURL: "https://get.pxhere.com/photo/animal-pet-kitten-cat-small-mammal-fauna-heal-blue-eye-close-up-nose-whiskers-vertebrate-domestic-lying-tabby-cat-norwegian-forest-cat-ginger-fur-small-to-medium-sized-cats-cat-like-mammal-carnivoran-domestic-short-haired-cat-domestic-long-haired-cat-609263.jpg"
         }, 
         token);
       

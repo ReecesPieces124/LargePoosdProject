@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { get } from "http";
 import { toast } from "sonner";
 import Footer from "@/components/Footer";
+import { MapPin, VenetianMask, Calendar } from 'lucide-react';
 
 function SearchPage() {
   interface Cat {
@@ -34,7 +35,9 @@ function SearchPage() {
     state: string;
     description: string;
     imageURL: string;
+    age: string,
     token: string;
+    pfUrl: string;
   }
 
   const [cats, setCats] = useState<Cat[]>([]);
@@ -45,6 +48,7 @@ function SearchPage() {
     zip: "",
     gender: "",
     age: "",
+    pfUrl: ""
   });
 
   async function getCats(e: any): Promise<void> {
@@ -63,7 +67,6 @@ function SearchPage() {
     const catsReq = await fetchAllCats();
     setCats(catsReq);
     console.log(catsReq);
-    cats.map((cat) => console.log(cat.imageURL));
   }
 
   return (
@@ -148,14 +151,46 @@ function SearchPage() {
 
       <div className="grid grid-cols-3 gap-10">
         {cats.map((cat) => (
-          <Card>
-            <CardHeader>
-              <CardTitle>{cat.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <img className="rounded-md" src={cat.imageURL} />
-            </CardContent>
-          </Card>
+          <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold">{cat.name}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <img 
+              className="rounded-md w-full h-48 object-cover" 
+              src={cat.imageURL} 
+              alt={`Photo of ${cat.name}`}
+            />
+            
+            <div className="flex items-center space-x-2">
+              <MapPin className="w-4 h-4 text-gray-500" />
+              <span className="text-sm text-gray-700">
+                {cat.city}, {cat.state}
+              </span>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <VenetianMask className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-700 capitalize">
+                  {cat.gender}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-700 capitalize">
+                  {cat.age}
+                </span>
+              </div>
+            </div>
+            
+            <div className="border-t pt-3">
+              <p className="text-sm text-gray-600">
+                {cat.description}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
         ))}
       </div>
       <Footer />
