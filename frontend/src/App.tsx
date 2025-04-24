@@ -29,7 +29,6 @@ function App() {
           {/* Redirect for unknown routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <Footer/>
         <Toaster/>
     </>
   )

@@ -52,7 +52,7 @@ function PostCat() {
         reader.onload = () => resolve(reader.result as string);
         reader.onerror = error => reject(error);
       });
-
+      console.log(imageBase64);
       // Submit with token
       await createCat({ 
         catData: {
@@ -109,6 +109,15 @@ function PostCat() {
       </div>
 
       <div className="w-180 mx-auto mt-5">
+      <div className="mb-2">
+          <Input
+            id="name"
+            placeholder="Name"
+            className="text-sm px-2 py-1 w-full mx-auto"
+            value={data.name}
+            onChange={(e) => setData({...data, name: e.target.value})}
+          />
+        </div>
         <div className="mb-2">
           <Input
             id="city"
