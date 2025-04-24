@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 type AuthContextType = {
   isAuthenticated: boolean;
+  token: string | null;  // Added token to context type
   login: (token: string) => void;
   logout: () => void;
   getAuthHeader: () => HeadersInit;
@@ -11,36 +12,35 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('token')
-  );
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const navigate = useNavigate();
 
+  // Derive isAuthenticated from token state
+  const isAuthenticated = !!token;
+
   const getAuthHeader = (): HeadersInit => {
-    const token = localStorage.getItem('token');
     return {
       'Authorization': token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json'
     };
   };
 
-  const login = (token: string) => {
-    localStorage.setItem('token', token);
-    setIsAuthenticated(true);
+  const login = (newToken: string) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);  // Update token state
     navigate('/search');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    setIsAuthenticated(false);
+    setToken(null);  // Clear token state
     navigate('/');
   };
 
   // Verify token on initial load
   useEffect(() => {
     const verifyToken = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
+      if (token) {  // Use token state
         try {
           const response = await fetch('http://localhost:5000/api/auth/verify', {
             headers: getAuthHeader()
@@ -55,10 +55,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     verifyToken();
-  }, []);
+  }, [token]);  // Add token to dependency array
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, getAuthHeader }}>
+    <AuthContext.Provider value={{ isAuthenticated, token, login, logout, getAuthHeader }}>
       {children}
     </AuthContext.Provider>
   );

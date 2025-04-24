@@ -9,6 +9,7 @@ import Footer from './HomeComponents/Footer'
 import { Toaster } from "@/components/ui/sonner"
 import ProtectedRoute from './HomeComponents/ProtectedRoute'
 import Search from './pages/SearchPage'
+import PostCats from './pages/PostCats'
 function App() {
   return (
     <>
@@ -22,6 +23,7 @@ function App() {
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/search" element={<Search />} />
+            <Route path="/post-cats" element={<PostCats/>}/>
           </Route>
 
           {/* Redirect for unknown routes */}

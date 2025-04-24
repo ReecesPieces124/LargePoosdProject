@@ -11,7 +11,7 @@ const homeNavItems = [
 
 const authNavItems = [
   { name: "Browse Cats", path: "/search" },
-  { name: "Post a Cat", path: "/post" },
+  { name: "Post a Cat", path: "/post-cats" },
   { name: "Logout", path: "/logout" },
 ] as const;
 
