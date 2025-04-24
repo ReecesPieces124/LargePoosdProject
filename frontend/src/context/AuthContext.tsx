@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  token: string | null;  // Added token to context type
+  token: string | null;
   login: (token: string) => void;
   logout: () => void;
   getAuthHeader: () => HeadersInit;
@@ -15,9 +15,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const navigate = useNavigate();
 
-  // Derive isAuthenticated from token state
-  const isAuthenticated = !!token;
-
   const getAuthHeader = (): HeadersInit => {
     return {
       'Authorization': token ? `Bearer ${token}` : '',
@@ -27,20 +24,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (newToken: string) => {
     localStorage.setItem('token', newToken);
-    setToken(newToken);  // Update token state
+    setToken(newToken);
     navigate('/search');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    setToken(null);  // Clear token state
+    setToken(null);
     navigate('/');
   };
 
   // Verify token on initial load
   useEffect(() => {
     const verifyToken = async () => {
-      if (token) {  // Use token state
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
         try {
           const response = await fetch('http://localhost:5000/api/auth/verify', {
             headers: getAuthHeader()
@@ -55,10 +53,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     verifyToken();
-  }, [token]);  // Add token to dependency array
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, token, login, logout, getAuthHeader }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated: !!token,
+      token,
+      login, 
+      logout, 
+      getAuthHeader 
+    }}>
       {children}
     </AuthContext.Provider>
   );
