@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
-import { createCat } from '@/catsHelpers';
+import { createCat } from "@/catsHelpers";
 
 function PostCat() {
   const [image, setImage] = useState<File | null>(null);
@@ -10,7 +10,7 @@ function PostCat() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { token } = useAuth();
-  
+
   const [data, setData] = useState({
     city: "",
     state: "",
@@ -18,14 +18,14 @@ function PostCat() {
     zip: "",
     name: "",
     description: "",
-    gender: ''
+    gender: "",
   });
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setImage(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -50,17 +50,18 @@ function PostCat() {
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = () => resolve(reader.result as string);
-        reader.onerror = error => reject(error);
+        reader.onerror = (error) => reject(error);
       });
       console.log(imageBase64);
       // Submit with token
       await createCat(
         {
           ...data,
-          imageURL: imageBase64
-        }, 
-        token);
-      
+          imageURL: imageBase64,
+        },
+        token
+      );
+
       // Reset form after successful submission
       setData({
         city: "",
@@ -69,13 +70,12 @@ function PostCat() {
         zip: "",
         name: "",
         description: "",
-        gender: ''
+        gender: "",
       });
       setImage(null);
       setPreview(null);
-      
+
       alert("Cat posted successfully!");
-      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to post cat");
     } finally {
@@ -91,7 +91,11 @@ function PostCat() {
           className="h-[500px] w-[75%] bg-gray-100 shadow-2xl rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-300"
         >
           {preview ? (
-            <img src={preview} alt="Preview" className="h-full w-full object-cover rounded-lg" />
+            <img
+              src={preview}
+              alt="Preview"
+              className="h-full w-full object-cover rounded-lg"
+            />
           ) : (
             <span className="text-lg font-medium">Click to upload image</span>
           )}
@@ -103,7 +107,6 @@ function PostCat() {
           onChange={handleImageUpload}
           className="hidden"
         />
-        
         <div className="w-[55%]">
           <div className="mb-4">
             <Input
@@ -181,10 +184,14 @@ function PostCat() {
               placeholder="Type your description here"
               className="text-base px-2 py-2 w-full border rounded-lg resize-none"
               value={data.description}
-              onChange={(e) => setData({ ...data, description: e.target.value })}
+              onChange={(e) =>
+                setData({ ...data, description: e.target.value })
+              }
               rows={5}
             />
-            <p className="text-sm text-gray-500 text-left mt-1">✍️ Give your cat a cuddly bio.</p>
+            <p className="text-sm text-gray-500 text-left mt-1">
+              ✍️ Give your cat a cuddly bio.
+            </p>
           </div>
 
           {error && <div className="text-red-500 mb-4">{error}</div>}
