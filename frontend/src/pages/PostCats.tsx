@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
-import { createCat } from '@/catsHelpers';
+import { createCat } from "@/catsHelpers";
 
 function PostCat() {
   const [image, setImage] = useState<File | null>(null);
@@ -10,7 +10,7 @@ function PostCat() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { token } = useAuth();
-  
+
   const [data, setData] = useState({
     city: "",
     state: "",
@@ -18,14 +18,14 @@ function PostCat() {
     zip: "",
     name: "",
     description: "",
-    gender: ''
+    gender: "",
   });
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setImage(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -50,17 +50,18 @@ function PostCat() {
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = () => resolve(reader.result as string);
-        reader.onerror = error => reject(error);
+        reader.onerror = (error) => reject(error);
       });
       console.log(imageBase64);
       // Submit with token
       await createCat(
         {
           ...data,
-          imageURL: "https://get.pxhere.com/photo/animal-pet-kitten-cat-small-mammal-fauna-heal-blue-eye-close-up-nose-whiskers-vertebrate-domestic-lying-tabby-cat-norwegian-forest-cat-ginger-fur-small-to-medium-sized-cats-cat-like-mammal-carnivoran-domestic-short-haired-cat-domestic-long-haired-cat-609263.jpg"
-        }, 
-        token);
-      
+          imageURL: imageBase64,
+        },
+        token
+      );
+
       // Reset form after successful submission
       setData({
         city: "",
@@ -69,13 +70,12 @@ function PostCat() {
         zip: "",
         name: "",
         description: "",
-        gender: ''
+        gender: "",
       });
       setImage(null);
       setPreview(null);
-      
+
       alert("Cat posted successfully!");
-      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to post cat");
     } finally {
@@ -85,15 +85,19 @@ function PostCat() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="p-4 border rounded-md shadow-sm w-180 mx-auto mt-20">
+      <div className="p-6 border rounded-lg shadow-lg w-[900px] mx-auto mt-30 flex gap-4">
         <div
           onClick={() => document.getElementById("file-upload")?.click()}
-          className="mb-1 h-80 w-full bg-gray-100 shadow-1xl rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-300"
+          className="h-[500px] w-[75%] bg-gray-100 shadow-2xl rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-300"
         >
           {preview ? (
-            <img src={preview} alt="Preview" className="h-full w-full object-cover rounded-md" />
+            <img
+              src={preview}
+              alt="Preview"
+              className="h-full w-full object-cover rounded-lg"
+            />
           ) : (
-            <span>Click to upload image</span>
+            <span className="text-lg font-medium">Click to upload image</span>
           )}
         </div>
         <Input
@@ -103,102 +107,110 @@ function PostCat() {
           onChange={handleImageUpload}
           className="hidden"
         />
-        <Button type="button" className="text-sm px-2 py-1 mt-2">
-          {image ? "Change Image" : "Add Image"}
-        </Button>
-      </div>
-
-      <div className="w-180 mx-auto mt-5">
-      <div className="mb-2">
-          <Input
-            id="name"
-            placeholder="Name"
-            className="text-sm px-2 py-1 w-full mx-auto"
-            value={data.name}
-            onChange={(e) => setData({...data, name: e.target.value})}
-          />
-        </div>
-        <div className="mb-2">
-          <Input
-            id="city"
-            placeholder="City"
-            className="text-sm px-2 py-1 w-full mx-auto"
-            value={data.city}
-            onChange={(e) => setData({...data, city: e.target.value})}
-          />
-        </div>
-        <div className="mb-2">
-          <Input
-            id="zip"
-            placeholder="Zip"
-            className="text-sm px-2 py-1 w-full mx-auto"
-            value={data.zip}
-            onChange={(e) => setData({...data, zip: e.target.value})}
-          />
-        </div>
-        <div className="flex gap-4 mb-3">
-          <Input
-            id="state"
-            placeholder="State"
-            className="text-sm px-2 py-1 w-full border rounded-md"
-            value={data.state}
-            onChange={(e) => setData({...data, state: e.target.value})}
-          />
-          <select
-            id="age"
-            className="text-sm px-2 py-1 w-full border rounded-md"
-            value={data.age}
-            onChange={(e) => setData({...data, age: e.target.value})}
-          >
-            <option value="" disabled>Age</option>
-            <option value="baby">Baby</option>
-            <option value="young">Young</option>
-            <option value="adult">Adult</option>
-            <option value="senior">Senior</option>
-          </select>
-        </div>
-        <div className="flex gap-4 mb-3">
-          <select
-            id="gender"
-            className="text-sm px-2 py-1 w-full border rounded-md"
-            value={data.gender}
-            onChange={(e) => setData({...data, gender: e.target.value})}
-          >
-            <option value="" disabled>Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-        <div className="mb-1.5 relative">
-          <p className="text-sm font-medium text-gray-700 mb-0.5 text-left">Your description</p>
-          <div className="relative">
+        <div className="w-[55%]">
+          <div className="mb-4">
             <Input
-              id="description"
-              placeholder="Type your description here"
-              className="text-sm px-1 py-10 w-full mx-auto peer"
-              value={data.description}
-              onChange={(e) => setData({...data, description: e.target.value})}
+              id="name"
+              placeholder="Name"
+              className="text-base px-3 py-2 w-full"
+              value={data.name}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
             />
           </div>
-          <p className="text-sm text-gray-500 text-left">✍️ Give your cat a cuddly bio.</p>
-        </div>
+          <div className="mb-4">
+            <Input
+              id="city"
+              placeholder="City"
+              className="text-base px-3 py-2 w-full"
+              value={data.city}
+              onChange={(e) => setData({ ...data, city: e.target.value })}
+            />
+          </div>
+          <div className="mb-4">
+            <Input
+              id="zip"
+              placeholder="Zip"
+              className="text-base px-3 py-2 w-full"
+              value={data.zip}
+              onChange={(e) => setData({ ...data, zip: e.target.value })}
+            />
+          </div>
+          <div className="flex gap-6 mb-4">
+            <Input
+              id="state"
+              placeholder="State"
+              className="text-base px-3 py-2 w-full border rounded-lg"
+              value={data.state}
+              onChange={(e) => setData({ ...data, state: e.target.value })}
+            />
+            <select
+              id="age"
+              className="text-base px-3 py-2 w-full border rounded-lg"
+              value={data.age}
+              onChange={(e) => setData({ ...data, age: e.target.value })}
+            >
+              <option value="" disabled>
+                Age
+              </option>
+              <option value="baby">Baby</option>
+              <option value="young">Young</option>
+              <option value="adult">Adult</option>
+              <option value="senior">Senior</option>
+            </select>
+          </div>
+          <div className="flex gap-6 mb-4">
+            <select
+              id="gender"
+              className="text-base px-3 py-2 w-full border rounded-lg"
+              value={data.gender}
+              onChange={(e) => setData({ ...data, gender: e.target.value })}
+            >
+              <option value="" disabled>
+                Gender
+              </option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div className=" relative">
+            <label
+              htmlFor="description"
+              className="text-base font-medium text-gray-700 mb-1 text-left block"
+            >
+              Your description
+            </label>
+            <textarea
+              id="description"
+              placeholder="Type your description here"
+              className="text-base px-2 py-2 w-full border rounded-lg resize-none"
+              value={data.description}
+              onChange={(e) =>
+                setData({ ...data, description: e.target.value })
+              }
+              rows={5}
+            />
+            <p className="text-sm text-gray-500 text-left mt-1">
+              ✍️ Give your cat a cuddly bio.
+            </p>
+          </div>
 
-        {error && <div className="text-red-500 mb-3">{error}</div>}
+          {error && <div className="text-red-500 mb-4">{error}</div>}
 
-        <div className="flex justify-between">
-          <Button 
-            type="button" 
-            className="text-sm px-2 bg-black hover:bg-gray-700 w-30 ml-55"
-          >
-            Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            className="text-sm px-2 bg-black hover:bg-gray-700 w-30 mr-55"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Posting..." : "Post"}
-          </Button>
+          <div className="flex justify-center mt-4 gap-4">
+            <Button
+              type="button"
+              className="text-base px-4 py-2 bg-black hover:bg-gray-700 w-36"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="text-base px-4 py-2 bg-black hover:bg-gray-700 w-36"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Posting..." : "Post"}
+            </Button>
+          </div>
         </div>
       </div>
     </form>

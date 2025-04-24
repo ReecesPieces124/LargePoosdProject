@@ -17,12 +17,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchAllCats } from "@/catsHelpers";
 import { cacheSearch } from "@/catsHelpers";
 import { Button } from "@/components/ui/button";
-import { get } from "http";
 import { toast } from "sonner";
 import Footer from "@/components/Footer";
 import { MapPin, VenetianMask, Calendar } from 'lucide-react';
@@ -41,6 +39,7 @@ function SearchPage() {
   }
 
   const [cats, setCats] = useState<Cat[]>([]);
+  const [showFooter, setShowFooter] = useState(true);
 
   const [data, setData] = useState({
     city: "",
@@ -50,6 +49,17 @@ function SearchPage() {
     age: "",
     pfUrl: ""
   });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowFooter(window.scrollY === 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   async function getCats(e: any): Promise<void> {
     e.preventDefault();
@@ -193,7 +203,7 @@ function SearchPage() {
         </Card>
         ))}
       </div>
-      <Footer />
+      {showFooter && <Footer />}
     </div>
   );
 }
