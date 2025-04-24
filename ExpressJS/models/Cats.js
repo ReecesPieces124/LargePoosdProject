@@ -5,6 +5,7 @@ const mongoose = require('mongoose'); // explained in index.js
 
 // doesn't have to match what's online on atlas
 const catsSchema = new mongoose.Schema({ 
+    pfURL: String, // petfinder URL
     name: String,
     age: String,
     gender: String,

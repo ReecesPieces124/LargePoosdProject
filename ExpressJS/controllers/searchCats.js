@@ -31,6 +31,7 @@ async function searchCats(req, res) {
     const cats = data.animals.map(c => ({
       pfID: c.id,
       name: c.name,
+      pfURL: c.url,
       age: c.age,
       status: c.status,
       gender: c.gender,
