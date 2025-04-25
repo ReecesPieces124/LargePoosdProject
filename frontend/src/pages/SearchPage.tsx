@@ -24,7 +24,7 @@ import { deleteCat } from "@/catsHelpers";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Footer from "@/components/Footer";
-import { MapPin, VenetianMask, Calendar } from 'lucide-react';
+import { Mail, MapPin, VenetianMask, Calendar } from 'lucide-react';
 import { useAuth } from "@/context/AuthContext";
 
 function SearchPage() {
@@ -40,9 +40,6 @@ function SearchPage() {
     pfURL: string,
     _id?: string
   }
-  const isBase64Image = (str: string) => {
-    return str.startsWith('data:image/') && str.includes('base64,');
-  };
   const { isAuthenticated, getAuthHeader } = useAuth();
   const [cats, setCats] = useState<Cat[]>([]);
   const [showFooter, setShowFooter] = useState(true);
@@ -166,7 +163,7 @@ function SearchPage() {
 
       <div className="grid grid-cols-3 gap-10">
         {cats.map((cat) => (
-          <Card className="w-[350px]">
+        <Card className="w-[350px]">
           <CardHeader>
             <CardTitle className="text-xl font-bold">{cat.name}</CardTitle>
           </CardHeader>
@@ -198,6 +195,23 @@ function SearchPage() {
                 </span>
               </div>
             </div>
+            {cat.pfURL && (
+                <div className="flex items-center space-x-2">
+                    <Mail className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <div 
+                    className="text-xs text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                    onClick={() => {
+                        navigator.clipboard.writeText(cat.pfURL);
+                        toast.success('Contact info copied to clipboard');
+                    }}
+                    title="Click to copy"
+                    >
+                    {cat.pfURL.length > 25 
+                        ? `${cat.pfURL.substring(0, 22)}...` 
+                        : cat.pfURL}
+                    </div>
+                </div>
+                )}
             
             <div className="border-t pt-3">
               <p className="text-sm text-gray-600">

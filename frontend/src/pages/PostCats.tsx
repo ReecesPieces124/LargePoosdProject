@@ -19,6 +19,7 @@ function PostCat() {
     name: "",
     description: "",
     gender: "",
+    pfURL: ""
   });
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +42,16 @@ function PostCat() {
     setIsSubmitting(true);
 
     try {
+      // Validate all required fields
       if (!image) {
         throw new Error("Please upload an image");
+      }
+
+      const requiredFields = ['name', 'city', 'state', 'zip', 'age', 'gender', 'description', 'pfURL'];
+      const missingFields = requiredFields.filter(field => !data[field as keyof typeof data]);
+
+      if (missingFields.length > 0) {
+        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
       }
 
       // Convert image to base64
@@ -52,7 +61,7 @@ function PostCat() {
         reader.onload = () => resolve(reader.result as string);
         reader.onerror = (error) => reject(error);
       });
-      console.log(imageBase64);
+
       // Submit with token
       await createCat(
         {
@@ -70,6 +79,7 @@ function PostCat() {
         name: "",
         description: "",
         gender: "",
+        pfURL: ""
       });
       setImage(null);
       setPreview(null);
@@ -105,6 +115,7 @@ function PostCat() {
           accept="image/*"
           onChange={handleImageUpload}
           className="hidden"
+          required
         />
         <div className="w-[55%]">
           <div className="mb-4">
@@ -114,6 +125,7 @@ function PostCat() {
               className="text-base px-3 py-2 w-full"
               value={data.name}
               onChange={(e) => setData({ ...data, name: e.target.value })}
+              required
             />
           </div>
           <div className="mb-4">
@@ -123,6 +135,7 @@ function PostCat() {
               className="text-base px-3 py-2 w-full"
               value={data.city}
               onChange={(e) => setData({ ...data, city: e.target.value })}
+              required
             />
           </div>
           <div className="mb-4">
@@ -132,6 +145,7 @@ function PostCat() {
               className="text-base px-3 py-2 w-full"
               value={data.zip}
               onChange={(e) => setData({ ...data, zip: e.target.value })}
+              required
             />
           </div>
           <div className="flex gap-6 mb-4">
@@ -141,12 +155,14 @@ function PostCat() {
               className="text-base px-3 py-2 w-full border rounded-lg"
               value={data.state}
               onChange={(e) => setData({ ...data, state: e.target.value })}
+              required
             />
             <select
               id="age"
               className="text-base px-3 py-2 w-full border rounded-lg"
               value={data.age}
               onChange={(e) => setData({ ...data, age: e.target.value })}
+              required
             >
               <option value="" disabled>
                 Age
@@ -163,6 +179,7 @@ function PostCat() {
               className="text-base px-3 py-2 w-full border rounded-lg"
               value={data.gender}
               onChange={(e) => setData({ ...data, gender: e.target.value })}
+              required
             >
               <option value="" disabled>
                 Gender
@@ -170,6 +187,17 @@ function PostCat() {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
+          </div>
+          <div className="mb-4">
+            <Input
+              id="contact"
+              type="email"
+              placeholder="Contact Email"
+              className="text-base px-3 py-2 w-full"
+              value={data.pfURL}
+              onChange={(e) => setData({ ...data, pfURL: e.target.value })}
+              required
+            />
           </div>
           <div className=" relative">
             <label
@@ -187,6 +215,7 @@ function PostCat() {
                 setData({ ...data, description: e.target.value })
               }
               rows={5}
+              required
             />
             <p className="text-sm text-gray-500 text-left mt-1">
               ✍️ Give your cat a cuddly bio.
